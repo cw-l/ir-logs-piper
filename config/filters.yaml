@@ -1,0 +1,18 @@
+# Copyright (C) 2026 https://github.com/cw-l
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
+pipeline:
+  filters:
+    - name: record_modifier
+      match: windows.*
+      record:
+        - "host ${COMPUTERNAME}"
+        - "ir_metadata.pipeline_version 0.1.0"
+
+    # Rate Limiting & Storm Protection
+    - name: throttle
+      match: windows.*
+      rate: 100            # Max allowed log events per evaluation window
+      window: 5            # Time window duration (seconds) for rate averaging
+      interval: 1s         # Counter reset evaluation interval

@@ -1,0 +1,31 @@
+# Copyright (C) 2026 https://github.com/cw-l
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
+pipeline:
+  outputs:
+    - name: s3
+      match: windows.*
+      bucket: bcfs-endpoints-ir-logs
+      region: auto
+      endpoint: https://209fbc7b8a702a2b7c775e7a0c209a57.r2.cloudflarestorage.com
+      s3_key_format: /telemetry/${HOSTNAME}/%Y-%m-%d/%H%M%S_$UUID.json.gz
+      compression: gzip
+
+      # Batching & Size Limits
+      total_file_size: 10M            # Max uncompressed batch size; forces instant flush during log spikes, >= x2 upload_chunk_size 
+      upload_chunk_size: 5M           # Part size threshold used when staging S3 payload uploads
+      upload_timeout: 2m              # Max idle time to buffer logs before forcing a flush to R2
+      use_put_object: On              # Uses direct single-part HTTP PUT instead of multipart uploads 
+
+      # Local Buffer
+      store_dir: ${ProgramData}/fluent-bit/buffer
+      store_dir_limit_size: 500M
+
+      # Threading, Retries & Network
+      net.keepalive: Off              # Closes TCP connection after upload; prevents R2 idle drops and socket errors
+      net.connect_timeout: 10         # Max seconds allowed to establish TCP/TLS connection before timing out
+
+      # Async Threading & Exponential Retry Backoff Controls
+      workers: 1                      # Spawns 1 background thread for gzip compression and network I/O
+      retry_limit: no_limits          # Never drop a chunk

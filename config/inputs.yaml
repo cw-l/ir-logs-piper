@@ -1,0 +1,179 @@
+# Copyright (C) 2026 https://github.com/cw-l
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
+pipeline:
+  inputs:
+    - name: winevtlog
+      tag: windows.ir_logs
+      channels: Security
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_security.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: |
+        <QueryList>
+          <Query Id="0" Path="Security">
+            <Select Path="Security">*[System[(EventID=4774 or EventID=4776 or EventID=4777 or EventID=4720 or EventID=4722 or EventID=4723 or EventID=4724 or EventID=4725 or EventID=4726 or EventID=4738 or EventID=4728 or EventID=4729 or EventID=4732 or EventID=4733 or EventID=4756 or EventID=4757 or EventID=4741 or EventID=4742 or EventID=4743 or EventID=4780)]]</Select>
+            <Select Path="Security">*[System[(EventID=4688 or EventID=4689 or EventID=5712 or EventID=4624 or EventID=4625 or EventID=4634 or EventID=4647 or EventID=4648 or EventID=4672 or EventID=4778 or EventID=4779 or EventID=4801 or EventID=4802 or EventID=4803 or EventID=4964 or EventID=4627 or EventID=4740 or EventID=4767 or EventID=4719)]]</Select>
+            <Select Path="Security">*[System[(EventID=4817 or EventID=4902 or EventID=4904 or EventID=4905 or EventID=4706 or EventID=4713 or EventID=4716 or EventID=4864 or EventID=4715 or EventID=4906 or EventID=4908 or EventID=4912 or EventID=4673 or EventID=4674 or EventID=4705 or EventID=4608 or EventID=4609)]]</Select>
+            <Select Path="Security">*[System[(EventID=4616 or EventID=4621 or EventID=4610 or EventID=4611 or EventID=4614 or EventID=4622 or EventID=4697 or EventID=4612 or EventID=4615 or EventID=4618 or EventID=5038 or EventID=5056 or EventID=5061 or EventID=1102 or EventID=6416 or EventID=4663 or EventID=4670 or EventID=4698 or EventID=4699)]]</Select>
+            <Select Path="Security">*[System[(EventID=4700 or EventID=4701 or EventID=4702 or EventID=4946 or EventID=4947 or EventID=4948 or EventID=4950 or EventID=4954 or EventID=4956)]]</Select>
+          </Query>
+        </QueryList>
+
+    - name: winevtlog
+      tag: windows.powershell_logs
+      channels: Microsoft-Windows-PowerShell/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_powershell.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=4104 or EventID=24577 or EventID=8193 or EventID=8194 or EventID=8197)]]"
+
+    - name: winevtlog
+      tag: windows.powershell_legacy_logs
+      channels: Windows PowerShell
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_powershell_legacy.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=400 or EventID=403)]]"
+
+    - name: winevtlog
+      tag: windows.system_logs
+      channels: System
+      interval_sec: 5winevtlog_system.db
+      db: ${ProgramData}/fluent-bit/data/winevtlog_system.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=12 or EventID=13 or EventID=41 or EventID=27 or EventID=107 or EventID=104 or EventID=7040)]]"
+
+    - name: winevtlog
+      tag: windows.application_logs
+      channels: Application
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_application.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=1022 or EventID=1033 or EventID=1034 or EventID=1040 or EventID=1042 or EventID=11707 or EventID=11724 or EventID=865 or EventID=866 or EventID=867 or EventID=868 or EventID=882)]]"
+
+    - name: winevtlog
+      tag: windows.taskscheduler_logs
+      channels: Microsoft-Windows-TaskScheduler/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_taskscheduler.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=100 or EventID=102 or EventID=106 or EventID=129 or EventID=140 or EventID=141 or EventID=142 or EventID=200 or EventID=201)]]"
+
+    - name: winevtlog
+      tag: windows.shellcore_logs
+      channels: Microsoft-Windows-Shell-Core/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_shellcore.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=9707 or EventID=9708)]]"
+
+    - name: winevtlog
+      tag: windows.winrm_logs
+      channels: Microsoft-Windows-WinRM/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_winrm.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=6 or EventID=81 or EventID=168 or EventID=169)]]"
+
+    - name: winevtlog
+      tag: windows.rdp_logs
+      channels: Microsoft-Windows-TerminalServices-LocalSessionManager/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_rdp.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=22 or EventID=23 or EventID=24 or EventID=25 or EventID=39 or EventID=40)]]"
+
+    - name: winevtlog
+      tag: windows.rdp_auth_logs
+      channels: Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_rdp_auth.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=1149)]]"
+
+    - name: winevtlog
+      tag: windows.firewall_logs
+      channels: Microsoft-Windows-Windows Firewall With Advanced Security/Firewall
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_firewall.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=2004 or EventID=2005 or EventID=2006 or EventID=2009)]]"
+
+    - name: winevtlog
+      tag: windows.defender_logs
+      channels: Microsoft-Windows-Windows Defender/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_defender.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=1005 or EventID=1006 or EventID=1008 or EventID=1010 or EventID=2001 or EventID=2003 or EventID=3002 or EventID=5001 or EventID=5007 or EventID=5010 or EventID=5012)]]"
+
+    - name: winevtlog
+      tag: windows.applocker_exe_logs
+      channels: Microsoft-Windows-AppLocker/EXE and DLL
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_applocker_exe.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=8003 or EventID=8004)]]"
+
+    - name: winevtlog
+      tag: windows.applocker_script_logs
+      channels: Microsoft-Windows-AppLocker/MSI and Script
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_applocker_script.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=8005 or EventID=8006 or EventID=8007)]]"
+
+    - name: winevtlog
+      tag: windows.wlan_logs
+      channels: Microsoft-Windows-WLAN-AutoConfig/Operational
+      interval_sec: 5
+      db: ${ProgramData}/fluent-bit/data/winevtlog_wlan.db
+      storage.type: filesystem
+      ignore_missing_channels: true
+      read_existing_events: true
+      read_limit_per_cycle: 64KB
+      event_query: "*[System[(EventID=8001 or EventID=8003)]]"

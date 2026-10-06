@@ -1,0 +1,30 @@
+# Copyright (C) 2026 https://github.com/cw-l
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
+service:
+  # Global Engine Bounds
+  flush: 10                                                   # Global engine interval (seconds) for moving collected data to output plugins
+  log_level: warn                                             # Engine logging verbosity level (warn: failures/retries only)
+  log_file: ${ProgramData}/fluent-bit/logs/fluent-bit.log     # Local engine log; dir created by install.ps1, rotated by scheduled task
+
+  # Global Scheduler Backoff
+  scheduler.base: 15                                          # Initial wait time (15s) before first upload retry
+  scheduler.cap: 600                                          # Max delay cap (10m) between exponential retries
+
+  # Storage Engine Configuration
+  storage.path: ${ProgramData}/fluent-bit/storage             # Disk buffer directory path
+  storage.sync: full                                          # Flush buffer metadata safely to disk
+  storage.checksum: on                                        # Enable: detects corrupt buffer chunks after crashes
+  storage.backlog.mem_limit: 10M                              # RAM limit allocated for loading backlog chunks
+
+  # Operational visibility — uncomment if you need it
+  # http_server: on
+  # http_listen: 127.0.0.1
+  # http_port: 2020                                           # change to your prefered port
+  # storage.metrics: on
+
+includes:
+  - inputs.yaml
+  - filters.yaml
+  - outputs.yaml
